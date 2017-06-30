@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -16,11 +17,11 @@ import sun.security.krb5.internal.PAEncTSEnc;
 public class TestComparators_And_Filters {
 	public static void main(String[] args) {
 		//L-19
-		String name = "aSubhobroto";
+		//String name = "aSubhobroto";
 		//character to IntStream
-		name.chars().forEach(System.out::println);
+		//name.chars().forEach(System.out::println);
 		//IntStream to char
-		name.chars().mapToObj(ch->Character.valueOf((char)ch)).forEach(System.out::println);
+		//name.chars().mapToObj(ch->Character.valueOf((char)ch)).forEach(System.out::println);
 		//L-20 Sorting Element
 		final List<Person> persons = Arrays.asList(
 				new Person("Subho", 27),
@@ -35,6 +36,27 @@ public class TestComparators_And_Filters {
 				new Person("Subho123456789", 50)
 				
 				);
+		
+		final List<Person> persons2 = Arrays.asList(
+				new Person("Subho", 27),
+				new Person("Subho12", 45),
+				new Person("Subho12352352345", 17),
+				new Person("Subho1234", 07),
+				new Person("Subho123456", 50),
+				new Person("Subho1234567", 50),
+				new Person("Subho1234567894t5234524", 50)
+				
+				);
+		
+
+		persons
+			.stream()
+            .filter(persons2::contains)
+            .collect(Collectors.toList())
+            .forEach(System.out::println);
+		
+		
+		
 		persons.stream().
 			sorted((person1, person2) -> person1.ageDifference(person2)).
 			collect(Collectors.toList()).stream().forEach(System.out::println);
@@ -50,11 +72,11 @@ public class TestComparators_And_Filters {
 		//L-23 Multiple And Fluent Comparisons
 		Function<Person, String> byName = person -> person.getName();
 		
-		persons.stream().
-			sorted(Comparator.comparing(byName)).
-			collect(Collectors.toList()).
-			stream().
-			forEach(System.out::println);
+		persons.stream()
+			.sorted(Comparator.comparing(byName))
+			.collect(Collectors.toList())
+			.stream()
+			.forEach(System.out::println);
 		
 		Function<Person, Integer> byAge = (person) -> (Integer)person.getAge();
 		persons.stream().
@@ -64,9 +86,12 @@ public class TestComparators_And_Filters {
 			forEach(System.out::println);
 		
 		//L-24 Using The Collect Method
-		final List<Person> sorted = persons.stream().
-			sorted(Comparator.comparing(byName).thenComparing(byAge)).
-			collect(ArrayList::new,ArrayList::add,ArrayList::addAll);
+		final List<Person> sorted = 
+				persons
+					.stream()
+					.sorted(Comparator.comparing(byName)
+					.thenComparing(byAge))
+					.collect(ArrayList::new,ArrayList::add,ArrayList::addAll);
 		
 		System.err.println(sorted);
 		
